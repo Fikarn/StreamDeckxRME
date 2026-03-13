@@ -4,25 +4,26 @@
     {
       "key": "title",
       "type": "text",
-      "rect": [0, 0, 200, 30],
-      "font": { "size": 14, "weight": 600 },
-      "alignment": "center",
-      "color": "#AAAAAA"
+      "rect": [8, 2, 184, 24],
+      "font": { "size": 12, "weight": 600 },
+      "alignment": "left",
+      "color": "#8C8C96"
     },
     {
       "key": "value",
       "type": "text",
-      "rect": [0, 30, 200, 40],
-      "font": { "size": 20, "weight": 700 },
+      "rect": [0, 24, 200, 44],
+      "font": { "size": 28, "weight": 700 },
       "alignment": "center",
-      "color": "#FFFFFF"
+      "color": "#E8E8EC"
     },
     {
       "key": "indicator",
       "type": "bar",
-      "rect": [10, 80, 180, 16],
-      "bar_bg_c": "#333333",
-      "bar_fill_c": "#4CAF50",
+      "subtype": 2,
+      "rect": [8, 74, 184, 20],
+      "bar_bg_c": "#2A2A30",
+      "bar_fill_c": "#00C896",
       "value": 0,
       "range": { "min": 0, "max": 100 },
       "border_w": 0

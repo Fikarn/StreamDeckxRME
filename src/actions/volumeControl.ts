@@ -53,7 +53,7 @@ export class VolumeControl extends SingletonAction<VolumeSettings> {
     if ("setFeedback" in actionInstance) {
       (actionInstance as { setFeedback(payload: Record<string, unknown>): Promise<void> }).setFeedback({
         title: label,
-        value: formatVolume(oscVal),
+        value: { value: formatVolume(oscVal), color: oscVal > 0.82 ? "#FF8C00" : "#E8E8EC" },
         indicator: Math.round(oscVal * 100),
       });
     }

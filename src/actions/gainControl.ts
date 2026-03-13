@@ -51,8 +51,11 @@ export class GainControl extends SingletonAction<GainSettings> {
     if ("setFeedback" in actionInstance) {
       (actionInstance as { setFeedback(payload: Record<string, unknown>): Promise<void> }).setFeedback({
         title: `AN ${channel}`,
-        value: `${db} dB`,
-        indicator: Math.round((db / 65) * 100),
+        value: { value: `${db} dB`, color: db >= 65 ? "#E53935" : "#E8E8EC" },
+        indicator: {
+          value: Math.round((db / 65) * 100),
+          bar_fill_c: db > 55 ? "#E53935" : db > 45 ? "#FF6B35" : "#00C896",
+        },
       });
     }
   }
