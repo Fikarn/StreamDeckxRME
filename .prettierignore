@@ -1,0 +1,4 @@
+node_modules/
+dist/
+com.edvinlandvik.totalmix-ufx.sdPlugin/bin/
+package-lock.json

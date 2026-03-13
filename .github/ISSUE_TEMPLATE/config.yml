@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: TotalMix FX OSC Documentation
+    url: https://www.rme-audio.de/downloads.html
+    about: RME's official TotalMix FX documentation and OSC reference
+  - name: Stream Deck SDK Documentation
+    url: https://docs.elgato.com/streamdeck/sdk/
+    about: Elgato's official Stream Deck plugin SDK docs

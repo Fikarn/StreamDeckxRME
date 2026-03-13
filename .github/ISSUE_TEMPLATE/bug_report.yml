@@ -1,0 +1,62 @@
+name: Bug Report
+description: Report a bug with the plugin
+labels: ["bug"]
+body:
+  - type: textarea
+    id: description
+    attributes:
+      label: Description
+      description: What happened?
+    validations:
+      required: true
+
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: Steps to Reproduce
+      description: How can we reproduce this issue?
+      placeholder: |
+        1. Assign the Gain Control action to an encoder
+        2. Rotate the encoder
+        3. ...
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected Behavior
+      description: What did you expect to happen?
+    validations:
+      required: true
+
+  - type: input
+    id: rme-interface
+    attributes:
+      label: RME Interface
+      description: Which RME audio interface are you using?
+      placeholder: e.g. Fireface UFX III
+    validations:
+      required: true
+
+  - type: input
+    id: os
+    attributes:
+      label: Operating System
+      placeholder: e.g. macOS 15.3 / Windows 11
+    validations:
+      required: true
+
+  - type: input
+    id: sd-version
+    attributes:
+      label: Stream Deck Software Version
+      placeholder: e.g. 6.8.0
+    validations:
+      required: true
+
+  - type: textarea
+    id: additional
+    attributes:
+      label: Additional Context
+      description: Logs, screenshots, or anything else that might help.

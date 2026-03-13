@@ -1,5 +1,15 @@
 node_modules/
-com.edvinlandvik.totalmix-ufx.sdPlugin/bin/
 dist/
+com.edvinlandvik.totalmix-ufx.sdPlugin/bin/
+
 *.js.map
+*.log
+npm-debug.log*
+
 .DS_Store
+.env
+.env.local
+.vscode/
+.idea/
+*.swp
+*.swo
