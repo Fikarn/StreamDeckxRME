@@ -1,0 +1,71 @@
+{
+  "Actions": [
+    {
+      "Icon": "imgs/actions/gain",
+      "Name": "Gain Control",
+      "Controllers": ["Encoder"],
+      "Encoder": {
+        "layout": "layouts/gain-layout.json"
+      },
+      "PropertyInspectorPath": "ui/gain-pi.html",
+      "States": [{ "Image": "imgs/actions/gain" }],
+      "UUID": "com.edvinlandvik.totalmix-ufx.gain-control"
+    },
+    {
+      "Icon": "imgs/actions/volume",
+      "Name": "Volume Control",
+      "Controllers": ["Encoder"],
+      "Encoder": {
+        "layout": "layouts/volume-layout.json"
+      },
+      "PropertyInspectorPath": "ui/volume-pi.html",
+      "States": [{ "Image": "imgs/actions/volume" }],
+      "UUID": "com.edvinlandvik.totalmix-ufx.volume-control"
+    },
+    {
+      "Icon": "imgs/actions/phantom",
+      "Name": "Phantom Power (48V)",
+      "Controllers": ["Keypad"],
+      "DisableAutomaticStates": true,
+      "PropertyInspectorPath": "ui/phantom-pi.html",
+      "States": [
+        { "Image": "imgs/states/phantom-off", "Name": "48V Off" },
+        { "Image": "imgs/states/phantom-on", "Name": "48V On" }
+      ],
+      "UUID": "com.edvinlandvik.totalmix-ufx.phantom-power"
+    },
+    {
+      "Icon": "imgs/actions/mute",
+      "Name": "Mute Toggle",
+      "Controllers": ["Keypad"],
+      "DisableAutomaticStates": true,
+      "PropertyInspectorPath": "ui/mute-pi.html",
+      "States": [
+        { "Image": "imgs/states/mute-off", "Name": "Unmuted" },
+        { "Image": "imgs/states/mute-on", "Name": "Muted" }
+      ],
+      "UUID": "com.edvinlandvik.totalmix-ufx.mute-toggle"
+    }
+  ],
+  "Author": "Edvin Landvik",
+  "Category": "TotalMix UFX",
+  "CategoryIcon": "imgs/plugin/category",
+  "CodePath": "bin/plugin.js",
+  "Description": "Control RME TotalMix FX via OSC — preamp gain, phantom power, output volumes, and mutes.",
+  "Icon": "imgs/plugin/icon",
+  "Name": "TotalMix UFX Control",
+  "Nodejs": {
+    "Version": "20",
+    "Debug": "enabled"
+  },
+  "OS": [
+    { "Platform": "mac", "MinimumVersion": "13" },
+    { "Platform": "windows", "MinimumVersion": "10" }
+  ],
+  "SDKVersion": 2,
+  "Software": {
+    "MinimumVersion": "6.6"
+  },
+  "UUID": "com.edvinlandvik.totalmix-ufx",
+  "Version": "1.0.0"
+}

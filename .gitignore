@@ -1,0 +1,5 @@
+node_modules/
+com.edvinlandvik.totalmix-ufx.sdPlugin/bin/
+dist/
+*.js.map
+.DS_Store

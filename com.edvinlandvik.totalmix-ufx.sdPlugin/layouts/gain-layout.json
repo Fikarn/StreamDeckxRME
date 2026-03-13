@@ -1,0 +1,31 @@
+{
+  "id": "com.edvinlandvik.totalmix-ufx.gain-layout",
+  "items": [
+    {
+      "key": "title",
+      "type": "text",
+      "rect": [0, 0, 200, 30],
+      "font": { "size": 14, "weight": 600 },
+      "alignment": "center",
+      "color": "#AAAAAA"
+    },
+    {
+      "key": "value",
+      "type": "text",
+      "rect": [0, 30, 200, 40],
+      "font": { "size": 20, "weight": 700 },
+      "alignment": "center",
+      "color": "#FFFFFF"
+    },
+    {
+      "key": "indicator",
+      "type": "bar",
+      "rect": [10, 80, 180, 16],
+      "bar_bg_c": "#333333",
+      "bar_fill_c": "#4CAF50",
+      "value": 0,
+      "range": { "min": 0, "max": 100 },
+      "border_w": 0
+    }
+  ]
+}

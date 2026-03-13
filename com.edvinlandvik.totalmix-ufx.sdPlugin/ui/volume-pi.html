@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <title>Volume Control</title>
+  <link rel="stylesheet" href="https://sdpi-components.dev/css/sdpi.css" />
+  <script src="https://sdpi-components.dev/js/sdpi-components.js"></script>
+</head>
+<body>
+  <sdpi-item label="Bus">
+    <sdpi-select setting="bus">
+      <option value="input">Input</option>
+      <option value="playback">Playback</option>
+      <option value="output">Output</option>
+    </sdpi-select>
+  </sdpi-item>
+  <sdpi-item label="Channel">
+    <sdpi-textfield setting="channel" type="number" min="1" max="16" placeholder="1"></sdpi-textfield>
+  </sdpi-item>
+  <sdpi-item label="Label">
+    <sdpi-textfield setting="label" placeholder="Main Out"></sdpi-textfield>
+  </sdpi-item>
+</body>
+</html>
