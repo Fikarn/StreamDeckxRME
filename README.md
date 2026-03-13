@@ -35,18 +35,12 @@ All actions receive real-time feedback from TotalMix FX — changes made in the 
 
 ## Installation
 
-### From Release
-
-Download the latest `.streamDeckPlugin` file from [Releases](https://github.com/Fikarn/StreamDeckxRME/releases) and double-click to install.
-
-### From Source
-
 ```bash
 git clone https://github.com/Fikarn/StreamDeckxRME.git
 cd StreamDeckxRME
 npm install
 npm run build
-streamdeck link com.edvinlandvik.totalmix-ufx.sdPlugin
+npx streamdeck link com.edvinlandvik.totalmix-ufx.sdPlugin
 ```
 
 Restart the Stream Deck software. The plugin actions will appear under the **TotalMix UFX** category.
@@ -64,8 +58,8 @@ npm run lint:fix     # Run ESLint with auto-fix
 ### Useful Commands
 
 ```bash
-streamdeck link com.edvinlandvik.totalmix-ufx.sdPlugin   # Symlink plugin for development
-streamdeck restart com.edvinlandvik.totalmix-ufx          # Restart the plugin
+npx streamdeck link com.edvinlandvik.totalmix-ufx.sdPlugin   # Symlink plugin for development
+npx streamdeck restart com.edvinlandvik.totalmix-ufx          # Restart the plugin
 ```
 
 ## Project Structure
