@@ -11,6 +11,7 @@ An Elgato Stream Deck + plugin for controlling an RME audio interface via [Total
 - **Volume Control** (encoder) — control fader volume on any bus (input / playback / output), LCD shows label and dB value
 - **Phantom Power** (keypad) — toggle 48V phantom power per input channel, button state reflects on/off
 - **Mute Toggle** (keypad) — toggle mute on any bus/channel, button state reflects muted/unmuted
+- **Connection monitoring** — automatic detection when TotalMix FX goes offline, with "OFFLINE" display and auto-recovery
 
 All actions receive real-time feedback from TotalMix FX — changes made in the TotalMix mixer are reflected on the Stream Deck immediately.
 
@@ -20,6 +21,20 @@ All actions receive real-time feedback from TotalMix FX — changes made in the 
 - Stream Deck software v6.6+
 - RME audio interface with TotalMix FX
 - Node.js 20+ (bundled by Stream Deck)
+
+## Quick Start
+
+1. **Install the plugin** — download the latest `.streamDeckPlugin` file from the [Releases page](https://github.com/Fikarn/StreamDeckxRME/releases) and double-click to install
+2. **Configure TotalMix FX OSC** — see [OSC Setup](#totalmix-fx-osc-setup) below
+3. **Add an action** — open Stream Deck software, find **TotalMix UFX** in the action list, drag a Gain or Volume action onto an encoder, or a Phantom/Mute action onto a key
+4. **Configure the action** — click the action to open its settings and select the channel/bus
+5. **Use it** — rotate encoders to adjust gain/volume, press keys to toggle phantom/mute
+
+### Suggested Stream Deck + Layout
+
+**Input Page** — 4 encoders for gain (AN 1–4) + 4 buttons for phantom power (AN 1–4)
+
+**Output Page** — 3 encoders for volume (Main Out, Phones 1, Phones 2) + 3 buttons for mute toggles
 
 ## TotalMix FX OSC Setup
 
@@ -35,6 +50,12 @@ All actions receive real-time feedback from TotalMix FX — changes made in the 
 
 ## Installation
 
+### From Release (recommended)
+
+Download the latest `.streamDeckPlugin` file from the [Releases page](https://github.com/Fikarn/StreamDeckxRME/releases) and double-click to install.
+
+### Build from Source
+
 ```bash
 git clone https://github.com/Fikarn/StreamDeckxRME.git
 cd StreamDeckxRME
@@ -44,6 +65,31 @@ npx streamdeck link com.edvinlandvik.totalmix-ufx.sdPlugin
 ```
 
 Restart the Stream Deck software. The plugin actions will appear under the **TotalMix UFX** category.
+
+## Troubleshooting
+
+### TotalMix not responding / "OFFLINE" on Stream Deck
+
+- Verify TotalMix FX is running and OSC is enabled (**Options > Settings > OSC**)
+- Confirm ports match: TotalMix incoming = `7001`, outgoing = `9001`
+- Check that "Remote Controller Address" is set to `127.0.0.1`
+- On Windows, ensure your firewall isn't blocking UDP on ports 7001/9001
+
+### Plugin not appearing in Stream Deck
+
+- Restart the Stream Deck software
+- If building from source, make sure `npm run build` completed without errors and you ran the `streamdeck link` command
+
+### Values out of sync
+
+- TotalMix uses a global bus selection model — the plugin's heartbeat polling refreshes state every few seconds. Wait a moment for values to sync.
+- If values remain stale, restart the plugin: `npx streamdeck restart com.edvinlandvik.totalmix-ufx`
+
+### Channel numbering confusion
+
+- Channel numbers correspond to the order of channels within TotalMix FX, **not** the physical connector numbers on some interfaces
+- AN 1–12 maps to analog input channels 1–12
+- For volume/mute, channel numbers refer to the selected bus (e.g., Output channel 1 = Main Out on most RME interfaces)
 
 ## Development
 
@@ -94,12 +140,7 @@ TotalMix FX uses a global bus selection model — you select a bus (`/1/busInput
 1. **Async command queue** — all OSC sends go through a serial queue that selects the correct bus before each command, preventing race conditions
 2. **State tracking** — the OSC bridge tracks the currently active bus so incoming feedback messages are attributed to the correct bus/channel
 3. **Heartbeat polling** — cycles through bus selections every 5 seconds to request fresh state from TotalMix
-
-### Suggested Stream Deck + Layout
-
-**Input Page** — 4 encoders for gain (AN 1–4) + 4 buttons for phantom power (AN 1–4)
-
-**Output Page** — 3 encoders for volume (Main Out, Phones 1, Phones 2) + 3 buttons for mute toggles
+4. **Connection monitoring** — detects when TotalMix stops responding (no OSC messages within 8s) and shows "OFFLINE" on all actions, with automatic recovery when TotalMix comes back
 
 ## OSC Address Reference
 

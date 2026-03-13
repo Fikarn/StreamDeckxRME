@@ -14,16 +14,22 @@ type GainSettings = {
 };
 
 type GainListener = (bus: BusType, ch: number, db: number) => void;
+type ConnectionListener = (connected: boolean) => void;
 
 @action({ UUID: "com.edvinlandvik.totalmix-ufx.gain-control" })
 export class GainControl extends SingletonAction<GainSettings> {
   private listeners = new Map<string, GainListener>();
+  private connectionListeners = new Map<string, ConnectionListener>();
 
   override async onWillAppear(ev: WillAppearEvent<GainSettings>): Promise<void> {
     const channel = ev.payload.settings.channel || 1;
-    const state = oscBridge.getState("input", channel);
 
-    this.updateFeedback(ev.action, oscToGainDb(state.gain), channel);
+    if (oscBridge.connected) {
+      const state = oscBridge.getState("input", channel);
+      this.updateFeedback(ev.action, oscToGainDb(state.gain), channel);
+    } else {
+      this.showOffline(ev.action);
+    }
 
     const listener: GainListener = (bus, ch, db) => {
       if (bus === "input" && ch === channel) {
@@ -32,6 +38,17 @@ export class GainControl extends SingletonAction<GainSettings> {
     };
     this.listeners.set(ev.action.id, listener);
     oscBridge.on("gainChanged", listener);
+
+    const connListener: ConnectionListener = (connected) => {
+      if (connected) {
+        const state = oscBridge.getState("input", channel);
+        this.updateFeedback(ev.action, oscToGainDb(state.gain), channel);
+      } else {
+        this.showOffline(ev.action);
+      }
+    };
+    this.connectionListeners.set(ev.action.id, connListener);
+    oscBridge.on("connectionChanged", connListener);
   }
 
   override async onWillDisappear(ev: WillDisappearEvent<GainSettings>): Promise<void> {
@@ -40,9 +57,15 @@ export class GainControl extends SingletonAction<GainSettings> {
       oscBridge.off("gainChanged", listener);
       this.listeners.delete(ev.action.id);
     }
+    const connListener = this.connectionListeners.get(ev.action.id);
+    if (connListener) {
+      oscBridge.off("connectionChanged", connListener);
+      this.connectionListeners.delete(ev.action.id);
+    }
   }
 
   override async onDialRotate(ev: DialRotateEvent<GainSettings>): Promise<void> {
+    if (!oscBridge.connected) return;
     const channel = ev.payload.settings.channel || 1;
     await oscBridge.adjustGain(channel, ev.payload.ticks);
   }
@@ -56,6 +79,16 @@ export class GainControl extends SingletonAction<GainSettings> {
           value: Math.round((db / 65) * 100),
           bar_fill_c: db > 55 ? "#E53935" : db > 45 ? "#FF6B35" : "#00C896",
         },
+      });
+    }
+  }
+
+  private showOffline(actionInstance: WillAppearEvent<GainSettings>["action"]): void {
+    if ("setFeedback" in actionInstance) {
+      (actionInstance as { setFeedback(payload: Record<string, unknown>): Promise<void> }).setFeedback({
+        title: "OFFLINE",
+        value: { value: "No Connection", color: "#E53935" },
+        indicator: { value: 0, bar_fill_c: "#E53935" },
       });
     }
   }

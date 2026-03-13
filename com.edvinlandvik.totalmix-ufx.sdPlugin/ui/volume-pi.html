@@ -9,16 +9,38 @@
 <body>
   <sdpi-item label="Bus">
     <sdpi-select setting="bus">
+      <option value="output">Output</option>
       <option value="input">Input</option>
       <option value="playback">Playback</option>
-      <option value="output">Output</option>
     </sdpi-select>
   </sdpi-item>
   <sdpi-item label="Channel">
-    <sdpi-textfield setting="channel" type="number" min="1" max="16" placeholder="1"></sdpi-textfield>
+    <sdpi-select setting="channel">
+      <option value="1">1</option>
+      <option value="2">2</option>
+      <option value="3">3</option>
+      <option value="4">4</option>
+      <option value="5">5</option>
+      <option value="6">6</option>
+      <option value="7">7</option>
+      <option value="8">8</option>
+      <option value="9">9</option>
+      <option value="10">10</option>
+      <option value="11">11</option>
+      <option value="12">12</option>
+      <option value="13">13</option>
+      <option value="14">14</option>
+      <option value="15">15</option>
+      <option value="16">16</option>
+    </sdpi-select>
   </sdpi-item>
   <sdpi-item label="Label">
     <sdpi-textfield setting="label" placeholder="Main Out"></sdpi-textfield>
   </sdpi-item>
+  <details style="padding: 8px 16px; font-size: 11px; color: #9b9b9b;">
+    <summary style="cursor: pointer;">Help</summary>
+    <p>Bus types: Input = input faders, Playback = DAW playback, Output = hardware outputs (Main, Phones, etc.)</p>
+    <p>Requires TotalMix FX with OSC enabled (ports 7001/9001).</p>
+  </details>
 </body>
 </html>
