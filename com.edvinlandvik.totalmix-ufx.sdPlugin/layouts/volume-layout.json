@@ -12,7 +12,7 @@
     {
       "key": "value",
       "type": "text",
-      "rect": [0, 24, 200, 44],
+      "rect": [0, 26, 200, 42],
       "font": { "size": 28, "weight": 700 },
       "alignment": "center",
       "color": "#E8E8EC"

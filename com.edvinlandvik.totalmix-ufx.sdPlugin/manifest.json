@@ -48,7 +48,7 @@
     }
   ],
   "Author": "Edvin Landvik",
-  "Category": "TotalMix UFX",
+  "Category": "TotalMix UFX Control",
   "CategoryIcon": "imgs/plugin/category",
   "CodePath": "bin/plugin.js",
   "Description": "Control RME TotalMix FX via OSC — preamp gain, phantom power, output volumes, and mutes.",
