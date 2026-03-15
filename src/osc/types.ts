@@ -5,6 +5,14 @@ export interface ChannelState {
   phantom: boolean; // input bus only
   volume: number;   // 0.0–1.0 OSC value
   mute: boolean;
+  solo: boolean;
+  phase: boolean;
+}
+
+export interface GlobalState {
+  talkback: boolean;
+  dim: boolean;
+  mono: boolean;
 }
 
 export function stateKey(bus: BusType, channel: number): string {
@@ -12,7 +20,11 @@ export function stateKey(bus: BusType, channel: number): string {
 }
 
 export function defaultChannelState(): ChannelState {
-  return { gain: 0, phantom: false, volume: 0, mute: false };
+  return { gain: 0, phantom: false, volume: 0, mute: false, solo: false, phase: false };
+}
+
+export function defaultGlobalState(): GlobalState {
+  return { talkback: false, dim: false, mono: false };
 }
 
 export const BUS_OSC_MAP: Record<BusType, string> = {

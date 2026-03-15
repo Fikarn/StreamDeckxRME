@@ -4,8 +4,10 @@ import { TotalmixServer } from "./totalmixServer.js";
 import {
   BusType,
   ChannelState,
+  GlobalState,
   stateKey,
   defaultChannelState,
+  defaultGlobalState,
 } from "./types.js";
 import { gainDbToOsc, oscToGainDb } from "../utils/converters.js";
 
@@ -20,6 +22,7 @@ export class OscBridge extends EventEmitter {
   private client: TotalmixClient;
   private server: TotalmixServer;
   private state = new Map<string, ChannelState>();
+  private globalState: GlobalState = defaultGlobalState();
   private activeBus: BusType = "input";
   private heartbeatInterval: ReturnType<typeof setInterval> | null = null;
   private _connected = false;
@@ -51,6 +54,10 @@ export class OscBridge extends EventEmitter {
 
   getState(bus: BusType, channel: number): ChannelState {
     return { ...this.getOrCreate(bus, channel) };
+  }
+
+  getGlobalState(): GlobalState {
+    return { ...this.globalState };
   }
 
   private markConnected(): void {
@@ -123,6 +130,23 @@ export class OscBridge extends EventEmitter {
       return;
     }
 
+    // Global controls
+    if (address === "/1/talkback") {
+      this.globalState.talkback = value >= 0.5;
+      this.emit("talkbackChanged", this.globalState.talkback);
+      return;
+    }
+    if (address === "/1/mainDim") {
+      this.globalState.dim = value >= 0.5;
+      this.emit("dimChanged", this.globalState.dim);
+      return;
+    }
+    if (address === "/1/mainMono") {
+      this.globalState.mono = value >= 0.5;
+      this.emit("monoChanged", this.globalState.mono);
+      return;
+    }
+
     // Gain: /1/gainN
     const gainMatch = address.match(/^\/1\/gain(\d+)$/);
     if (gainMatch) {
@@ -166,15 +190,37 @@ export class OscBridge extends EventEmitter {
       this.emit("muteChanged", bus, ch, state.mute);
       return;
     }
+
+    // Solo: /1/soloN
+    const soloMatch = address.match(/^\/1\/solo(\d+)$/);
+    if (soloMatch) {
+      const ch = parseInt(soloMatch[1], 10);
+      const bus = this.activeBus;
+      const state = this.getOrCreate(bus, ch);
+      state.solo = value >= 0.5;
+      this.emit("soloChanged", bus, ch, state.solo);
+      return;
+    }
+
+    // Phase: /1/phaseN
+    const phaseMatch = address.match(/^\/1\/phase(\d+)$/);
+    if (phaseMatch) {
+      const ch = parseInt(phaseMatch[1], 10);
+      const bus = this.activeBus;
+      const state = this.getOrCreate(bus, ch);
+      state.phase = value >= 0.5;
+      this.emit("phaseChanged", bus, ch, state.phase);
+      return;
+    }
   }
 
   // --- Command methods (mutate state only AFTER successful send) ---
 
-  async adjustGain(channel: number, ticks: number): Promise<void> {
+  async adjustGain(channel: number, ticks: number, stepDb: number = GAIN_STEP_DB): Promise<void> {
     if (!this._connected) return;
     const state = this.getOrCreate("input", channel);
     const currentDb = oscToGainDb(state.gain);
-    const newDb = Math.max(0, Math.min(65, currentDb + ticks * GAIN_STEP_DB));
+    const newDb = Math.max(0, Math.min(65, currentDb + ticks * stepDb));
     const oscVal = gainDbToOsc(newDb);
     try {
       await this.client.setGain(channel, oscVal);
@@ -198,16 +244,42 @@ export class OscBridge extends EventEmitter {
     }
   }
 
-  async adjustVolume(bus: BusType, channel: number, ticks: number): Promise<void> {
+  async adjustVolume(bus: BusType, channel: number, ticks: number, step: number = VOLUME_STEP): Promise<void> {
     if (!this._connected) return;
     const state = this.getOrCreate(bus, channel);
-    const newVal = Math.max(0, Math.min(1, state.volume + ticks * VOLUME_STEP));
+    const newVal = Math.max(0, Math.min(1, state.volume + ticks * step));
     try {
       await this.client.setVolume(bus, channel, newVal);
       state.volume = newVal;
       this.emit("volumeChanged", bus, channel, newVal);
     } catch (err) {
       console.error(`[OscBridge] Failed to set volume: ${err}`);
+    }
+  }
+
+  async setVolume(bus: BusType, channel: number, oscVal: number): Promise<void> {
+    if (!this._connected) return;
+    const clamped = Math.max(0, Math.min(1, oscVal));
+    try {
+      await this.client.setVolume(bus, channel, clamped);
+      const state = this.getOrCreate(bus, channel);
+      state.volume = clamped;
+      this.emit("volumeChanged", bus, channel, clamped);
+    } catch (err) {
+      console.error(`[OscBridge] Failed to set volume: ${err}`);
+    }
+  }
+
+  async setGain(channel: number, oscVal: number): Promise<void> {
+    if (!this._connected) return;
+    const clamped = Math.max(0, Math.min(1, oscVal));
+    try {
+      await this.client.setGain(channel, clamped);
+      const state = this.getOrCreate("input", channel);
+      state.gain = clamped;
+      this.emit("gainChanged", "input", channel, oscToGainDb(clamped));
+    } catch (err) {
+      console.error(`[OscBridge] Failed to set gain: ${err}`);
     }
   }
 
@@ -221,6 +293,77 @@ export class OscBridge extends EventEmitter {
       this.emit("muteChanged", bus, channel, newVal);
     } catch (err) {
       console.error(`[OscBridge] Failed to set mute: ${err}`);
+    }
+  }
+
+  async toggleSolo(bus: BusType, channel: number): Promise<void> {
+    if (!this._connected) return;
+    const state = this.getOrCreate(bus, channel);
+    const newVal = !state.solo;
+    try {
+      await this.client.setSolo(bus, channel, newVal);
+      state.solo = newVal;
+      this.emit("soloChanged", bus, channel, newVal);
+    } catch (err) {
+      console.error(`[OscBridge] Failed to set solo: ${err}`);
+    }
+  }
+
+  async togglePhase(bus: BusType, channel: number): Promise<void> {
+    if (!this._connected) return;
+    const state = this.getOrCreate(bus, channel);
+    const newVal = !state.phase;
+    try {
+      await this.client.setPhase(bus, channel, newVal);
+      state.phase = newVal;
+      this.emit("phaseChanged", bus, channel, newVal);
+    } catch (err) {
+      console.error(`[OscBridge] Failed to set phase: ${err}`);
+    }
+  }
+
+  async toggleTalkback(): Promise<void> {
+    if (!this._connected) return;
+    const newVal = !this.globalState.talkback;
+    try {
+      await this.client.sendGlobal("/1/talkback", newVal ? 1 : 0);
+      this.globalState.talkback = newVal;
+      this.emit("talkbackChanged", newVal);
+    } catch (err) {
+      console.error(`[OscBridge] Failed to toggle talkback: ${err}`);
+    }
+  }
+
+  async toggleDim(): Promise<void> {
+    if (!this._connected) return;
+    const newVal = !this.globalState.dim;
+    try {
+      await this.client.sendGlobal("/1/mainDim", newVal ? 1 : 0);
+      this.globalState.dim = newVal;
+      this.emit("dimChanged", newVal);
+    } catch (err) {
+      console.error(`[OscBridge] Failed to toggle dim: ${err}`);
+    }
+  }
+
+  async toggleMono(): Promise<void> {
+    if (!this._connected) return;
+    const newVal = !this.globalState.mono;
+    try {
+      await this.client.sendGlobal("/1/mainMono", newVal ? 1 : 0);
+      this.globalState.mono = newVal;
+      this.emit("monoChanged", newVal);
+    } catch (err) {
+      console.error(`[OscBridge] Failed to toggle mono: ${err}`);
+    }
+  }
+
+  async recallSnapshot(slot: number): Promise<void> {
+    if (!this._connected) return;
+    try {
+      await this.client.sendGlobal(`/1/snapshot${slot}`, 1);
+    } catch (err) {
+      console.error(`[OscBridge] Failed to recall snapshot: ${err}`);
     }
   }
 

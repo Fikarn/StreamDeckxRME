@@ -23,7 +23,7 @@
       "subtype": 4,
       "rect": [8, 74, 184, 20],
       "bar_bg_c": "#2A2A30",
-      "bar_fill_c": "#4A9EFF",
+      "bar_fill_c": "0:#1A5FCC,0.82:#4A9EFF,1.0:#FF8C00",
       "value": 0,
       "range": { "min": 0, "max": 100 },
       "border_w": 0

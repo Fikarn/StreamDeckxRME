@@ -84,6 +84,26 @@ export class TotalmixClient {
     });
   }
 
+  async setSolo(bus: BusType, channel: number, on: boolean): Promise<void> {
+    return this.enqueue(async () => {
+      await this.selectBus(bus);
+      await this.send(`/1/solo${channel}`, on ? 1 : 0);
+    });
+  }
+
+  async setPhase(bus: BusType, channel: number, on: boolean): Promise<void> {
+    return this.enqueue(async () => {
+      await this.selectBus(bus);
+      await this.send(`/1/phase${channel}`, on ? 1 : 0);
+    });
+  }
+
+  async sendGlobal(address: string, value: number): Promise<void> {
+    return this.enqueue(async () => {
+      await this.send(address, value);
+    });
+  }
+
   async selectBusForRefresh(bus: BusType): Promise<void> {
     return this.enqueue(async () => {
       await this.selectBus(bus);

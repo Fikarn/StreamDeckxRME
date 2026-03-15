@@ -3,6 +3,12 @@ import { GainControl } from "./actions/gainControl.js";
 import { VolumeControl } from "./actions/volumeControl.js";
 import { PhantomPower } from "./actions/phantomPower.js";
 import { MuteToggle } from "./actions/muteToggle.js";
+import { SoloToggle } from "./actions/soloToggle.js";
+import { PhaseToggle } from "./actions/phaseToggle.js";
+import { Talkback } from "./actions/talkback.js";
+import { Dim } from "./actions/dim.js";
+import { Mono } from "./actions/mono.js";
+import { SnapshotRecall } from "./actions/snapshotRecall.js";
 import { oscBridge } from "./osc/oscBridge.js";
 
 // Register actions
@@ -10,6 +16,12 @@ streamDeck.actions.registerAction(new GainControl());
 streamDeck.actions.registerAction(new VolumeControl());
 streamDeck.actions.registerAction(new PhantomPower());
 streamDeck.actions.registerAction(new MuteToggle());
+streamDeck.actions.registerAction(new SoloToggle());
+streamDeck.actions.registerAction(new PhaseToggle());
+streamDeck.actions.registerAction(new Talkback());
+streamDeck.actions.registerAction(new Dim());
+streamDeck.actions.registerAction(new Mono());
+streamDeck.actions.registerAction(new SnapshotRecall());
 
 // Start OSC bridge with retry on failure
 async function startOscWithRetry(): Promise<void> {

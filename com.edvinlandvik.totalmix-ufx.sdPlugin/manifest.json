@@ -5,7 +5,13 @@
       "Name": "Gain Control",
       "Controllers": ["Encoder"],
       "Encoder": {
-        "layout": "layouts/gain-layout.json"
+        "layout": "layouts/gain-layout.json",
+        "TriggerDescription": {
+          "Rotate": "Adjust gain",
+          "Touch": "Toggle mute",
+          "LongTouch": "Reset to 0 dB",
+          "Push": "Toggle mute"
+        }
       },
       "PropertyInspectorPath": "ui/gain-pi.html",
       "States": [{ "Image": "imgs/actions/gain" }],
@@ -16,7 +22,13 @@
       "Name": "Volume Control",
       "Controllers": ["Encoder"],
       "Encoder": {
-        "layout": "layouts/volume-layout.json"
+        "layout": "layouts/volume-layout.json",
+        "TriggerDescription": {
+          "Rotate": "Adjust volume",
+          "Touch": "Toggle mute",
+          "LongTouch": "Reset to 0 dB",
+          "Push": "Toggle mute"
+        }
       },
       "PropertyInspectorPath": "ui/volume-pi.html",
       "States": [{ "Image": "imgs/actions/volume" }],
@@ -45,13 +57,80 @@
         { "Image": "imgs/states/mute-on", "Name": "Muted" }
       ],
       "UUID": "com.edvinlandvik.totalmix-ufx.mute-toggle"
+    },
+    {
+      "Icon": "imgs/actions/solo",
+      "Name": "Solo Toggle",
+      "Controllers": ["Keypad"],
+      "DisableAutomaticStates": true,
+      "PropertyInspectorPath": "ui/solo-pi.html",
+      "States": [
+        { "Image": "imgs/states/solo-off", "Name": "Solo Off" },
+        { "Image": "imgs/states/solo-on", "Name": "Solo On" }
+      ],
+      "UUID": "com.edvinlandvik.totalmix-ufx.solo-toggle"
+    },
+    {
+      "Icon": "imgs/actions/phase",
+      "Name": "Phase / Polarity",
+      "Controllers": ["Keypad"],
+      "DisableAutomaticStates": true,
+      "PropertyInspectorPath": "ui/phase-pi.html",
+      "States": [
+        { "Image": "imgs/states/phase-off", "Name": "Phase Normal" },
+        { "Image": "imgs/states/phase-on", "Name": "Phase Inverted" }
+      ],
+      "UUID": "com.edvinlandvik.totalmix-ufx.phase-toggle"
+    },
+    {
+      "Icon": "imgs/actions/talkback",
+      "Name": "Talkback",
+      "Controllers": ["Keypad"],
+      "DisableAutomaticStates": true,
+      "States": [
+        { "Image": "imgs/states/talkback-off", "Name": "Talkback Off" },
+        { "Image": "imgs/states/talkback-on", "Name": "Talkback On" }
+      ],
+      "UUID": "com.edvinlandvik.totalmix-ufx.talkback"
+    },
+    {
+      "Icon": "imgs/actions/dim",
+      "Name": "Dim",
+      "Controllers": ["Keypad"],
+      "DisableAutomaticStates": true,
+      "States": [
+        { "Image": "imgs/states/dim-off", "Name": "Dim Off" },
+        { "Image": "imgs/states/dim-on", "Name": "Dim On" }
+      ],
+      "UUID": "com.edvinlandvik.totalmix-ufx.dim"
+    },
+    {
+      "Icon": "imgs/actions/mono",
+      "Name": "Mono",
+      "Controllers": ["Keypad"],
+      "DisableAutomaticStates": true,
+      "States": [
+        { "Image": "imgs/states/mono-off", "Name": "Stereo" },
+        { "Image": "imgs/states/mono-on", "Name": "Mono" }
+      ],
+      "UUID": "com.edvinlandvik.totalmix-ufx.mono"
+    },
+    {
+      "Icon": "imgs/actions/snapshot",
+      "Name": "Snapshot Recall",
+      "Controllers": ["Keypad"],
+      "PropertyInspectorPath": "ui/snapshot-pi.html",
+      "States": [
+        { "Image": "imgs/actions/snapshot" }
+      ],
+      "UUID": "com.edvinlandvik.totalmix-ufx.snapshot-recall"
     }
   ],
   "Author": "Edvin Landvik",
   "Category": "TotalMix UFX Control",
   "CategoryIcon": "imgs/plugin/category",
   "CodePath": "bin/plugin.js",
-  "Description": "Control RME TotalMix FX via OSC — preamp gain, phantom power, output volumes, and mutes.",
+  "Description": "Control RME TotalMix FX via OSC — gain, volume, phantom, mute, solo, phase, talkback, dim, mono, and snapshots.",
   "Icon": "imgs/plugin/icon",
   "Name": "TotalMix UFX Control",
   "Nodejs": {
@@ -67,5 +146,5 @@
     "MinimumVersion": "6.6"
   },
   "UUID": "com.edvinlandvik.totalmix-ufx",
-  "Version": "1.1.0"
+  "Version": "2.0.0"
 }

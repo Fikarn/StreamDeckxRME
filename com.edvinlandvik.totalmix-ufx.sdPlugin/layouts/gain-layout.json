@@ -19,11 +19,11 @@
     },
     {
       "key": "indicator",
-      "type": "bar",
-      "subtype": 2,
+      "type": "gbar",
+      "subtype": 4,
       "rect": [8, 74, 184, 20],
       "bar_bg_c": "#2A2A30",
-      "bar_fill_c": "#00C896",
+      "bar_fill_c": "0:#00C896,0.7:#FF6B35,0.9:#E53935",
       "value": 0,
       "range": { "min": 0, "max": 100 },
       "border_w": 0
